@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ETicketApp.Data\ETicketApp.Data.csproj" />
+    <ProjectReference Include="..\ETicketApp.Services\ETicketApp.Services.csproj" />
   </ItemGroup>
 
 </Project>

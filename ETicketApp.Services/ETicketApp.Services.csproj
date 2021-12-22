@@ -4,4 +4,9 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ETicketApp.Core\ETicketApp.Core.csproj" />
+    <ProjectReference Include="..\ETicketApp.Data\ETicketApp.Data.csproj" />
+  </ItemGroup>
+
 </Project>

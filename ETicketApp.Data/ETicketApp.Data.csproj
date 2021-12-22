@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ETicketApp.Core\ETicketApp.Core.csproj" />
-    <ProjectReference Include="..\ETicketApp.Services\ETicketApp.Services.csproj" />
   </ItemGroup>
 
 </Project>
