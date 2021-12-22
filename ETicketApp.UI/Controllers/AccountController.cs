@@ -15,12 +15,15 @@ namespace ETicketApp.UI.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ApplicationContext _context;
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ApplicationContext context)
+        public AccountController(UserManager<ApplicationUser> userManager,RoleManager<IdentityRole> roleManager, SignInManager<ApplicationUser> signInManager, ApplicationContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _roleManager = roleManager;
             _context = context;
+
         }
         public async Task<IActionResult> Users()
         {
@@ -60,6 +63,7 @@ namespace ETicketApp.UI.Controllers
         [AllowAnonymous]
         public IActionResult UserRegister() => View(new RegisterVM());
 
+        //[AllowAnonymous]
         public IActionResult AdminRegister() => View(new RegisterVM());
        
         [HttpPost]
@@ -84,14 +88,25 @@ namespace ETicketApp.UI.Controllers
             var newUserResponse = await _userManager.CreateAsync(newUser, registerVM.Password);
 
             if (newUserResponse.Succeeded)
+            {
+                bool userRoleExists = await _roleManager.RoleExistsAsync("User");
+                if (!userRoleExists)
+                {
+                    await _roleManager.CreateAsync(new IdentityRole("User"));
+                }
+
                 await _userManager.AddToRoleAsync(newUser, UserRoles.User);
+            }
+             
 
             return View("RegisterCompleted");
         }
 
         [HttpPost]
+        //[AllowAnonymous]
         public async Task<IActionResult> AdminRegister(RegisterVM registerVM)
         {
+         
             if (!ModelState.IsValid) return View(registerVM);
 
             var user = await _userManager.FindByEmailAsync(registerVM.EmailAddress);
@@ -110,7 +125,16 @@ namespace ETicketApp.UI.Controllers
             var newUserResponse = await _userManager.CreateAsync(newUser, registerVM.Password);
 
             if (newUserResponse.Succeeded)
+            {
+               
+                bool adminRoleExists = await _roleManager.RoleExistsAsync("Admin");
+                if (!adminRoleExists)
+                {                
+                     await _roleManager.CreateAsync(new IdentityRole("Admin"));
+                }
+
                 await _userManager.AddToRoleAsync(newUser, UserRoles.Admin);
+            }
 
             return View("RegisterCompleted");
         }
