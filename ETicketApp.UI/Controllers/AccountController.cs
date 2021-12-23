@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ETicketApp.UI.Controllers
@@ -17,7 +18,7 @@ namespace ETicketApp.UI.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ApplicationContext _context;
-        public AccountController(UserManager<ApplicationUser> userManager,RoleManager<IdentityRole> roleManager, SignInManager<ApplicationUser> signInManager, ApplicationContext context)
+        public AccountController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, SignInManager<ApplicationUser> signInManager, ApplicationContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -27,8 +28,15 @@ namespace ETicketApp.UI.Controllers
         }
         public async Task<IActionResult> Users()
         {
-            var users = await _context.Users.ToListAsync();
+            var users = await _userManager.GetUsersInRoleAsync("User");
             return View(users);
+        }
+        public async Task<IActionResult> Admins()
+        {
+            var loginedAdmin = await _userManager.GetUserAsync(User);
+            var admins = await _userManager.GetUsersInRoleAsync("Admin");
+            admins.Remove(loginedAdmin);
+            return View(admins);
         }
 
         [AllowAnonymous]
@@ -65,7 +73,7 @@ namespace ETicketApp.UI.Controllers
 
         //[AllowAnonymous]
         public IActionResult AdminRegister() => View(new RegisterVM());
-       
+
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> UserRegister(RegisterVM registerVM)
@@ -96,17 +104,24 @@ namespace ETicketApp.UI.Controllers
                 }
 
                 await _userManager.AddToRoleAsync(newUser, UserRoles.User);
+                return View("RegisterCompleted");
             }
-             
 
-            return View("RegisterCompleted");
+            else
+            {
+                TempData["Error"] = "The password must be at least 6 and at max 100 characters long. It must contain uppercase, lowercase and special character.";
+                return View();
+            }
+
+
+
         }
 
         [HttpPost]
         //[AllowAnonymous]
         public async Task<IActionResult> AdminRegister(RegisterVM registerVM)
         {
-         
+
             if (!ModelState.IsValid) return View(registerVM);
 
             var user = await _userManager.FindByEmailAsync(registerVM.EmailAddress);
@@ -126,17 +141,21 @@ namespace ETicketApp.UI.Controllers
 
             if (newUserResponse.Succeeded)
             {
-               
+
                 bool adminRoleExists = await _roleManager.RoleExistsAsync("Admin");
                 if (!adminRoleExists)
-                {                
-                     await _roleManager.CreateAsync(new IdentityRole("Admin"));
+                {
+                    await _roleManager.CreateAsync(new IdentityRole("Admin"));
                 }
 
                 await _userManager.AddToRoleAsync(newUser, UserRoles.Admin);
+                return View("RegisterCompleted");
             }
-
-            return View("RegisterCompleted");
+            else
+            {
+                TempData["Error"] = "The password must be at least 6 and at max 100 characters long. It must contain uppercase, lowercase and special character.";
+                return View();
+            }
         }
 
         [HttpPost]
@@ -151,6 +170,12 @@ namespace ETicketApp.UI.Controllers
         public IActionResult AccessDenied(string ReturnUrl)
         {
             return View();
+        }
+
+        public IActionResult Delete(string Id)
+        {
+            _userManager.DeleteAsync(_userManager.FindByIdAsync(Id).Result);
+            return RedirectToAction("Index", "Movies");
         }
     }
 }
