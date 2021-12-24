@@ -32,8 +32,8 @@
                             @foreach (var item in order.OrderItems)
                             {
                                 <li>
-                                    <div class="alert alert-info" role="alert">
-                                        <span class="badge bg-success">@item.Amount</span> [@item.Price.ToString("c")] - @item.Movie.Name
+                                    <div class="alert alert-success" role="alert">
+                                        <span class="badge bg-primary text-white">@item.Amount</span> [@item.Price.ToString("c")] - @item.Movie.Name
                                     </div>
                                 </li>
                             }

@@ -11,7 +11,7 @@
             <div class="card mb-3" style="max-width: 540px;">
                 <div class="row g-0">
                     <div class="col-md-12">
-                        <div class="card-header text-white bg-danger">
+                        <div class="card-header text-white bg-main">
                             <p class="card-text">
                                 <h5 class="card-title">
                                     @item.Name
@@ -72,3 +72,20 @@
 </div>
 
 @await Html.PartialAsync("_CreateItem", "Movies") 
+
+@section css{
+
+    <style>
+        body{
+            background:url('/images/bg1.jpg') !important;
+        }
+
+        footer{
+            background-color:#71106e !important;
+            
+        }
+        .text-muted{
+            color:white !important;
+        }
+    </style>
+}

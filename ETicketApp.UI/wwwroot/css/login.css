@@ -1,0 +1,20 @@
+﻿.form {
+    padding: 62px 48px;
+    border: 1px solid #c2c2c2;
+    border-radius: 15px;
+    text-align: start;
+    font-family: 'Noto Sans', sans-serif !important;
+    font-size: 14px !important;
+}
+
+body {
+    background: url('/images/bg1.jpg') !important;
+}
+
+footer {
+    background-color: #71106e !important;
+}
+
+.text-muted {
+    color: white !important;
+}
