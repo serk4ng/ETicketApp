@@ -1,4 +1,5 @@
 ﻿@using ETicketApp.UI.ViewModels;
+@using System.Globalization
 @model ShoppingCartVM
 
 @{
@@ -48,7 +49,7 @@
                     <td colspan="2"></td>
                     <td><b>Total:</b></td>
                     <td>
-                        @Model.ShoppingCartTotal.ToString("c")
+                        @Model.ShoppingCartTotal.ToString("c",CultureInfo.CreateSpecificCulture("en-US"))
                     </td>
                     <td></td>
                 </tr>

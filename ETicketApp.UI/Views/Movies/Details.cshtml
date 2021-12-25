@@ -1,4 +1,5 @@
-﻿@model Movie
+﻿@using System.Globalization
+@model Movie
 
 @{
     ViewData["Title"] = "Movie details";
@@ -82,7 +83,7 @@
                             </a>
                             <a class="btn btn-success text-white  @((DateTime.Now > Model.EndDate) ? "disabled" : "")" 
                                asp-controller="Orders" 
-                               asp-action="AddItemToShoppingCart" asp-route-id="@Model.Id"><i class="bi bi-cart-plus"></i> Add to Cart (Price @Model.Price.ToString("c"))</a>
+                               asp-action="AddItemToShoppingCart" asp-route-id="@Model.Id"><i class="bi bi-cart-plus"></i> Add to Cart (Price @Model.Price.ToString("c",CultureInfo.CreateSpecificCulture("en-US")))</a>
                         </p>
                     </div>
                 </div>

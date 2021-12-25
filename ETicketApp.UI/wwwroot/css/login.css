@@ -9,6 +9,7 @@
 
 body {
     background: url('/images/bg1.jpg') !important;
+    background-size:contain !important;
 }
 
 footer {

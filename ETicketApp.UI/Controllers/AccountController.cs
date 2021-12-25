@@ -172,9 +172,9 @@ namespace ETicketApp.UI.Controllers
             return View();
         }
 
-        public IActionResult Delete(string Id)
+        public async Task<IActionResult> Delete(string Id)
         {
-            _userManager.DeleteAsync(_userManager.FindByIdAsync(Id).Result);
+            await _userManager.DeleteAsync(_userManager.FindByIdAsync(Id).Result);
             return RedirectToAction("Index", "Movies");
         }
     }
